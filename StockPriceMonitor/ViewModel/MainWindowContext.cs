@@ -19,7 +19,7 @@ namespace StockPriceMonitor.ViewModel
         public ObservableCollection<Stock> FavoriteStocks { get; private set; }
 
         private DispatcherTimer _dispatcherTimer;
-        private TimeSpan _dispatcherTimerInterval = new TimeSpan(0, 0, 2);
+        private TimeSpan _dispatcherTimerInterval = new TimeSpan(0, 0, 3);
 
         public MainWindowContext()
         {
@@ -29,7 +29,7 @@ namespace StockPriceMonitor.ViewModel
             FavoriteStocks = new() { new Stock("xD"), new Stock("AAPL") };
             ApiHelper.InitializeClient();
             _dispatcherTimer = new DispatcherTimer() { Interval = _dispatcherTimerInterval };
-            _dispatcherTimer.Tick += new EventHandler(UpdateStockData);
+            _dispatcherTimer.Tick += DispatcherTimerTick;
         }
 
         private bool AddNewTicker_CanExecute()
@@ -50,6 +50,7 @@ namespace StockPriceMonitor.ViewModel
         private void StartMonitoring_Execute()
         {
             _dispatcherTimer.Start();
+            UpdateStockData();
         }
 
         private bool StopMonitoring_CanExecute()
@@ -62,7 +63,11 @@ namespace StockPriceMonitor.ViewModel
             _dispatcherTimer.Stop();
         }
 
-        private async void UpdateStockData(object source, EventArgs e)
+        private void DispatcherTimerTick(object sender, EventArgs e)
+        {
+            UpdateStockData();
+        }
+        private void UpdateStockData()
         {
             Task task = Task.Run(async () =>
             {

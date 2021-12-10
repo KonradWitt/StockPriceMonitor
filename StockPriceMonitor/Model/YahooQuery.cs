@@ -11,6 +11,7 @@ namespace StockPriceMonitor.Model
         {
             string url = ticker;
 
+
             using (HttpResponseMessage response = await ApiHelper.ApiClient.GetAsync(url))
             {
                 if (response.IsSuccessStatusCode)
@@ -19,7 +20,7 @@ namespace StockPriceMonitor.Model
 
                     return root;
                 }
-                else 
+                else
                 {
                     throw new Exception(response.ReasonPhrase);
                 }
