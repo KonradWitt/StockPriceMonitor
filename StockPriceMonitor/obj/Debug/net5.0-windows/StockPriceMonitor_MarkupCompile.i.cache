@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET5_0;NETCOREAPP
 D:\RepoWitt\StockPriceMonitor\StockPriceMonitor\App.xaml
-1-487866684
+21511064245
 
-18736925903
+19923168101
 196-209013743
-View\MainWindow.xaml;
+View\Controls\ButtonTemplate.xaml;View\MainWindow.xaml;
 
-False
+True
 

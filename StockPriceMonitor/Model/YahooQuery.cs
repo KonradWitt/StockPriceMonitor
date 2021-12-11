@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -7,7 +8,7 @@ namespace StockPriceMonitor.Model
 {
     internal class YahooQuery
     {
-        public static async Task<Root> GetTickerData(string ticker)
+        public async Task<Root> GetTickerData(string ticker)
         {
             string url = ticker;
 
@@ -26,5 +27,11 @@ namespace StockPriceMonitor.Model
                 }
             }
         }
+
+        public bool CheckIfResultsValid(OptionChain optionChain)
+        {
+            return optionChain.result?.Any() == true;
+        }
+
     }
 }

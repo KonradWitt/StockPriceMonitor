@@ -5,44 +5,93 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StockPriceMonitor"
         xmlns:vm="clr-namespace:StockPriceMonitor.ViewModel"
+        xmlns:c="clr-namespace:StockPriceMonitor.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="StockPriceMonitor" Height="450" Width="600">
     <Window.DataContext>
         <vm:MainWindowContext/>
     </Window.DataContext>
+
+    <Window.Resources>
+        <c:PriceChangeToColorConverter x:Key="PriceChangeToColorConverter"/>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBox Width="200" Height="50"/>
-            <Button Content="Add" Margin="10,0,10,0" Height="50" Width="100" Command="{Binding AddNewTicker}"/>
-        </StackPanel>
-        <ListView Grid.Row="1" ItemsSource="{Binding FavoriteStocks}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Ticker" Width="200">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Ticker}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Price" Width="200">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Price}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Start Monitoring" Margin="10,0,10,0" Height="50" Command="{Binding StartMonitoring}"/>
-            <Button Content="Stop Monitoring" Margin="10,0,10,0" Height="50" Command="{Binding StopMonitoring}"/>
-        </StackPanel>
+
+        <Grid Grid.Row="0" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Width="200" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="{Binding Path=UserMessage}"/>
+            <Border Grid.Row="1" Background="DarkGray" VerticalAlignment="Center" CornerRadius="8" Margin="10,10,10,10" Padding="5,5,5,5">
+                <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBox Width="200" Height="30" VerticalContentAlignment="Center" Background="LightGray" Text="{Binding Path= SearchText, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                    <Button Content="Add" Width="100" Command="{Binding AddTicker}"/>
+                </StackPanel>
+                
+            </Border>
+            
+        </Grid>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding FavoriteStocks}" Background="LightGray" Width="500" AutoGenerateColumns="False" CanUserResizeColumns="False" BorderThickness="0" RowHeaderWidth="0">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="DarkGray" />
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                </Style>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Ticker" Binding="{Binding Ticker}" Width="250" IsReadOnly="true">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="LightGray"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Price ($)" Binding="{Binding Price}" Width="70" IsReadOnly="true">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="{Binding Path=PriceChange, Converter={StaticResource PriceChangeToColorConverter}}"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn Header="Manage" Width="*" IsReadOnly="true">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Delete" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.DeleteTicker}" CommandParameter="{Binding Path=Ticker}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="LightGray"/>
+                        </Style>
+                    </DataGridTemplateColumn.CellStyle>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Border Grid.Row="2" Background="DarkGray" VerticalAlignment="Center" CornerRadius="8" Margin="10,10,10,10" Padding="5,5,5,5">
+            <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Start Monitoring" Command="{Binding StartMonitoring}"/>
+                <Button Content="Stop Monitoring"  Command="{Binding StopMonitoring}"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
