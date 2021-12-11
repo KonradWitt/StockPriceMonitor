@@ -28,8 +28,8 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Width="200" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="{Binding Path=UserMessage}"/>
-            <Border Grid.Row="1" Background="DarkGray" VerticalAlignment="Center" CornerRadius="8" Margin="10,10,10,10" Padding="5,5,5,5">
+            <Label Grid.Row="0" Width="200" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Red" Content="{Binding Path=UserMessage}"/>
+            <Border Grid.Row="1" Background="DarkGray" VerticalAlignment="Center" Width="500" CornerRadius="8" Margin="10,10,10,10" Padding="5,5,5,5">
                 <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBox Width="200" Height="30" VerticalContentAlignment="Center" Background="LightGray" Text="{Binding Path= SearchText, UpdateSourceTrigger=PropertyChanged}">
                         <TextBox.Resources>
@@ -64,6 +64,7 @@
                         <Style TargetType="DataGridCell">
                             <Setter Property="Background" Value="LightGray"/>
                         </Style>
+                        
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="Price ($)" Binding="{Binding Price}" Width="70" IsReadOnly="true">
@@ -87,7 +88,7 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Border Grid.Row="2" Background="DarkGray" VerticalAlignment="Center" CornerRadius="8" Margin="10,10,10,10" Padding="5,5,5,5">
+        <Border Grid.Row="2" Background="DarkGray" VerticalAlignment="Center" Width="500" CornerRadius="8" Margin="10,10,10,10" Padding="5,5,5,5">
             <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Content="Start Monitoring" Command="{Binding StartMonitoring}"/>
                 <Button Content="Stop Monitoring"  Command="{Binding StopMonitoring}"/>

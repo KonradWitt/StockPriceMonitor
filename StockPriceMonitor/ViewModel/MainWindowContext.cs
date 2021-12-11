@@ -133,6 +133,10 @@ namespace StockPriceMonitor.ViewModel
         private void StopMonitoring_Execute()
         {
             _dispatcherTimer.Stop();
+            foreach(var stock in FavoriteStocks)
+            {
+                stock.ResetPriceChange();
+            }
         }
 
         private void DispatcherTimerTick(object sender, EventArgs e)

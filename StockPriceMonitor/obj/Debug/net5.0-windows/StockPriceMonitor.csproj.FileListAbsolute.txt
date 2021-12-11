@@ -25,5 +25,5 @@ D:\RepoWitt\StockPriceMonitor\StockPriceMonitor\bin\Debug\net5.0-windows\Newtons
 D:\RepoWitt\StockPriceMonitor\StockPriceMonitor\bin\Debug\net5.0-windows\Newtonsoft.Json.Bson.dll
 D:\RepoWitt\StockPriceMonitor\StockPriceMonitor\obj\Debug\net5.0-windows\StockPriceMonitor.csproj.CopyComplete
 D:\RepoWitt\StockPriceMonitor\StockPriceMonitor\obj\Debug\net5.0-windows\StockPriceMonitor.csproj.AssemblyReference.cache
-D:\RepoWitt\StockPriceMonitor\StockPriceMonitor\obj\Debug\net5.0-windows\View\Controls\ButtonTemplate.baml
 D:\RepoWitt\StockPriceMonitor\StockPriceMonitor\obj\Debug\net5.0-windows\App.baml
+D:\RepoWitt\StockPriceMonitor\StockPriceMonitor\obj\Debug\net5.0-windows\View\Controls\ButtonTemplate.baml

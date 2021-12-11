@@ -67,6 +67,11 @@ namespace StockPriceMonitor.Model
                     return PriceChange.NoChange;
             }
         }
+
+        public void ResetPriceChange()
+        {
+            PriceChange = PriceChange.NoChange;
+        }
     }
 
     public enum PriceChange
