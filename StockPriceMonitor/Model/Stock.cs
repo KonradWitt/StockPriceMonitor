@@ -14,12 +14,6 @@ namespace StockPriceMonitor.Model
             _price = price;
         }
 
-        public void UpdatePrice(double newPrice)
-        {
-            PriceChange = CheckPriceChange(newPrice);
-            Price = newPrice ;
-        }
-
         public string Ticker { get { return _ticker; } }
         public double Price
         {
@@ -45,6 +39,12 @@ namespace StockPriceMonitor.Model
                     OnPropertyChanged();
                 }
             }
+        }
+
+        public void UpdatePrice(double newPrice)
+        {
+            PriceChange = CheckPriceChange(newPrice);
+            Price = newPrice;
         }
 
         private PriceChange CheckPriceChange(double newPrice)

@@ -127,7 +127,7 @@ namespace StockPriceMonitor.ViewModel
 
         private bool StartMonitoring_CanExecute()
         {
-            return FavoriteStocks.Any();
+            return FavoriteStocks.Any() && !_dispatcherTimer.IsEnabled;
         }
 
         private async void StartMonitoring_Execute()
