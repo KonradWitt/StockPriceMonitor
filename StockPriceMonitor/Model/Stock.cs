@@ -16,13 +16,8 @@ namespace StockPriceMonitor.Model
 
         public void UpdatePrice(double newPrice)
         {
-            //Tests while stock exchange is closed
-            Random random = new();
-            newPrice = newPrice + 2 * random.NextDouble() - 1;
-
             PriceChange = CheckPriceChange(newPrice);
             Price = newPrice ;
-
         }
 
         public string Ticker { get { return _ticker; } }
