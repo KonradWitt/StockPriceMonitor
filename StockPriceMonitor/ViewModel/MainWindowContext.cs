@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace StockPriceMonitor.ViewModel
 {
@@ -128,10 +130,10 @@ namespace StockPriceMonitor.ViewModel
             return FavoriteStocks.Any();
         }
 
-        private void StartMonitoring_Execute()
+        private async void StartMonitoring_Execute()
         {
             _dispatcherTimer.Start();
-            UpdateStockData();
+            await UpdateStockData();
         }
 
         private bool StopMonitoring_CanExecute()
@@ -153,25 +155,16 @@ namespace StockPriceMonitor.ViewModel
         {
             UpdateStockData();
         }
-
-        private void UpdateStockData()
+        private async Task UpdateStockData()
         {
-            Task task = Task.Run(async () =>
+            YahooQuery yahooQuery = new();
+
+            foreach (Stock stock in FavoriteStocks)
             {
-                YahooQuery yahooQuery = new();
-
-                foreach (Stock stock in FavoriteStocks)
-                {
-                    var stockData = await yahooQuery.GetTickerData(stock.Ticker);
-
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        double marketPrice = stockData.optionChain.result.First().quote.regularMarketPrice;
-
-                        stock.UpdatePrice(marketPrice);
-                    });
-                }
-            });
+                var stockData = await yahooQuery.GetTickerData(stock.Ticker);
+                double marketPrice = stockData.optionChain.result.First().quote.regularMarketPrice;
+                stock.UpdatePrice(marketPrice);
+            }
         }
     }
 }
