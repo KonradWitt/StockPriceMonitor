@@ -17,16 +17,12 @@
 
   <ItemGroup>
     <Resource Include="App.xaml" />
-    <Resource Include="View\Bin.png" />
+    <Resource Include="View\Pictures\Bin.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="View\Pictures\" />
   </ItemGroup>
 
 </Project>

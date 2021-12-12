@@ -54,13 +54,14 @@
         </Style>
         <Style x:Key="DataGridStyle" TargetType="DataGrid">
             <Setter Property="Background" Value="White"/>
-            <Setter Property="Width" Value="500"/>
+            <Setter Property="Width" Value="400"/>
             <Setter Property="AutoGenerateColumns" Value="False"/>
             <Setter Property="CanUserResizeColumns" Value="False"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="RowHeaderWidth" Value="0"/>
             <Setter Property="GridLinesVisibility" Value="None"/>
             <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+
         </Style>
         <Style x:Key="DataGridColumnHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="LightGray" />
@@ -79,7 +80,7 @@
         </Style>
         <Style x:Key="BorderStyle" TargetType="Border">
             <Setter Property="Background" Value="LightGray" />
-            <Setter Property="Width" Value="500" />
+            <Setter Property="Width" Value="400" />
             <Setter Property="CornerRadius" Value="8" />
             <Setter Property="BorderThickness" Value="2" />
             <Setter Property="BorderBrush" Value="Black" />
@@ -89,6 +90,7 @@
         <Style x:Key="TextBoxStyle" TargetType="TextBox">
             <Setter Property="Width" Value="200" />
             <Setter Property="Height" Value="30" />
+            <Setter Property="FontFamily" Value="Helvetica"/>
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Background" Value="LightGray" />
 
@@ -119,8 +121,14 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="LabelStyle" TargetType="Label">
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="FontFamily" Value="Helvetica"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="Red"/>
+        </Style>
     </Window.Resources>
-
 
     <Grid>
         <Grid.RowDefinitions>
@@ -128,33 +136,27 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
         <Grid Grid.Row="0" VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Width="200" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Red" Content="{Binding Path=UserMessage}"/>
-
+            <Label Grid.Row="0" Style="{StaticResource LabelStyle}" Content="{Binding Path=UserMessage}"/>
             <StackPanel Grid.Row="1"  Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBox Style="{StaticResource TextBoxStyle}"  Text="{Binding Path= SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                 <Button Content="Add" Style = "{StaticResource ButtonTextStyle}" Command="{Binding AddTicker}"/>
             </StackPanel>
-
-
         </Grid>
         <Border Grid.Row="1" Style="{StaticResource BorderStyle}">
             <DataGrid  Style="{StaticResource DataGridStyle}" ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}" RowStyle="{StaticResource DataGridRowStyle}" ItemsSource="{Binding FavoriteStocks}">
-                
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Ticker" Binding="{Binding Ticker}" Width="250" IsReadOnly="true">
+                    <DataGridTextColumn Header="Ticker" Binding="{Binding Ticker}" Width="*" IsReadOnly="true">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="Background" Value="White"/>
                                 <Setter Property="BorderThickness" Value="0"/>
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                             </Style>
-
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="Price ($)" Binding="{Binding Price}" Width="70" IsReadOnly="true">
@@ -166,11 +168,11 @@
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
-                    <DataGridTemplateColumn Header="Manage" Width="*" IsReadOnly="true">
+                    <DataGridTemplateColumn Header="Manage" Width="70" IsReadOnly="true">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource ButtonImageStyle}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.DeleteTicker}" CommandParameter="{Binding Path=Ticker}">
-                                    <Image Source="Bin.png" Width="25" Height="25"/>
+                                    <Image Source="Pictures/Bin.png" Width="25" Height="25"/>
                                 </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -187,7 +189,6 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
-
         <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,10,10,10">
             <Button Content="Start Monitoring" Style = "{StaticResource ButtonTextStyle}" Command="{Binding StartMonitoring}"/>
             <Button Content="Stop Monitoring" Style = "{StaticResource ButtonTextStyle}"  Command="{Binding StopMonitoring}"/>

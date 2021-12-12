@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Linq;
-using System.Drawing;
 
 namespace StockPriceMonitor.ViewModel
 {
@@ -18,7 +17,7 @@ namespace StockPriceMonitor.ViewModel
         public ICommand StartMonitoring { get; private set; }
         public ICommand StopMonitoring { get; private set; }
         public ObservableCollection<Stock> FavoriteStocks { get; private set; }
-        public PriceChange StockColor => FavoriteStocks.First().PriceChange;
+
 
         public string SearchText
         {
@@ -115,7 +114,7 @@ namespace StockPriceMonitor.ViewModel
 
         private void DeleteTicker_Execute(object ticker)
         {
-            FavoriteStocks.Remove(FavoriteStocks.First(s => s.Ticker == ticker));
+            FavoriteStocks.Remove(FavoriteStocks.First(p => p.Ticker == ticker));
         }
 
         private bool StartMonitoring_CanExecute()
