@@ -2,14 +2,11 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
-    <ApplicationDefinition Update="App.xaml">
+    <Resource Update="App.xaml">
       <SubType>Designer</SubType>
-    </ApplicationDefinition>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="View\Controls\ButtonTemplate.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="View\MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>

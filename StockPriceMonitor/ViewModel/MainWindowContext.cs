@@ -72,6 +72,10 @@ namespace StockPriceMonitor.ViewModel
             StopMonitoring = new Command(p => StopMonitoring_CanExecute(), p => StopMonitoring_Execute());
         }
 
+        
+
+        
+
         private bool AddTicker_CanExecute()
         {
 
@@ -127,13 +131,13 @@ namespace StockPriceMonitor.ViewModel
 
         private bool StopMonitoring_CanExecute()
         {
-            return FavoriteStocks.Any(); 
+            return FavoriteStocks.Any();
         }
 
         private void StopMonitoring_Execute()
         {
             _dispatcherTimer.Stop();
-            foreach(var stock in FavoriteStocks)
+            foreach (var stock in FavoriteStocks)
             {
                 stock.ResetPriceChange();
             }

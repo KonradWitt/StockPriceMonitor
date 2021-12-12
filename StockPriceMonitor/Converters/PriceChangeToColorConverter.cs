@@ -19,7 +19,7 @@ namespace StockPriceMonitor.Converters
             {
                 case PriceChange.Up: return new SolidColorBrush(Color.FromRgb(0, 255, 0));
                 case PriceChange.Down: return new SolidColorBrush(Color.FromRgb(255, 0, 0));
-                case PriceChange.NoChange: return new SolidColorBrush(Color.FromArgb(System.Drawing.Color.LightGray.A, System.Drawing.Color.LightGray.R, System.Drawing.Color.LightGray.G, System.Drawing.Color.LightGray.B));
+                case PriceChange.NoChange: return new SolidColorBrush(Color.FromRgb(255,255,255));
             }
 
             return Binding.DoNothing;

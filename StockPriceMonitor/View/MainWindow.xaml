@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:StockPriceMonitor"
         xmlns:vm="clr-namespace:StockPriceMonitor.ViewModel"
         xmlns:c="clr-namespace:StockPriceMonitor.Converters"
+        xmlns:s="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="StockPriceMonitor" Height="450" Width="600">
     <Window.DataContext>
@@ -14,7 +15,112 @@
 
     <Window.Resources>
         <c:PriceChangeToColorConverter x:Key="PriceChangeToColorConverter"/>
+        <Style x:Key = "ButtonTextStyle" TargetType = "Button">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontFamily" Value="Helvetica"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="Margin" Value="10,0,10,0"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="30"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}"
+                        CornerRadius="8"
+                        BorderThickness="2"
+                        BorderBrush="Black">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="Opacity" Value="0.2"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key = "ButtonImageStyle" TargetType = "Button">
+            <Setter Property="Foreground" Value="Transparent"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+        <Style x:Key="DataGridStyle" TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Width" Value="500"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserResizeColumns" Value="False"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        </Style>
+        <Style x:Key="DataGridColumnHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+        <Style x:Key="DataGridRowStyle" TargetType="{x:Type DataGridRow}">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black" />
+            </Style.Resources>
+        </Style>
+        <Style x:Key="BorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="Width" Value="500" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="Margin" Value="10,10,10,10" />
+            <Setter Property="Padding" Value="5,5,5,5" />
+        </Style>
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="Width" Value="200" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Background" Value="LightGray" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBoxBase">
+                        <Border CornerRadius="8" BorderThickness="2" BorderBrush="Black" x:Name="Bd" Background="{TemplateBinding Panel.Background}">
+                            <ScrollViewer Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="UIElement.IsEnabled">
+                                <Setter Property="Panel.Background" TargetName="Bd">
+                                    <Setter.Value>
+                                        <DynamicResource ResourceKey="{x:Static SystemColors.ControlBrushKey}" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="TextElement.Foreground">
+                                    <Setter.Value>
+                                        <DynamicResource ResourceKey="{x:Static SystemColors.GrayTextBrushKey}" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Trigger.Value>
+                                    <s:Boolean>False</s:Boolean>
+                                </Trigger.Value>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
+
 
     <Grid>
         <Grid.RowDefinitions>
@@ -29,70 +135,63 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Width="200" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Red" Content="{Binding Path=UserMessage}"/>
-            <Border Grid.Row="1" Background="DarkGray" VerticalAlignment="Center" Width="500" CornerRadius="8" Margin="10,10,10,10" Padding="5,5,5,5">
-                <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBox Width="200" Height="30" VerticalContentAlignment="Center" Background="LightGray" Text="{Binding Path= SearchText, UpdateSourceTrigger=PropertyChanged}">
-                        <TextBox.Resources>
-                            <Style TargetType="{x:Type Border}">
-                                <Setter Property="CornerRadius" Value="8"/>
-                            </Style>
-                        </TextBox.Resources>
-                    </TextBox>
-                    <Button Content="Add" Width="100" Command="{Binding AddTicker}"/>
-                </StackPanel>
-                
-            </Border>
-            
-        </Grid>
 
-        <DataGrid Grid.Row="1" ItemsSource="{Binding FavoriteStocks}" Background="LightGray" Width="500" AutoGenerateColumns="False" CanUserResizeColumns="False" BorderThickness="0" RowHeaderWidth="0">
-            <DataGrid.Resources>
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="DarkGray" />
-                    <Setter Property="FontSize" Value="14"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                </Style>
-                <Style TargetType="DataGridCell">
-                    <Setter Property="TextBlock.TextAlignment" Value="Center" />
-                </Style>
-            </DataGrid.Resources>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Ticker" Binding="{Binding Ticker}" Width="250" IsReadOnly="true">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="LightGray"/>
-                        </Style>
-                        
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Price ($)" Binding="{Binding Price}" Width="70" IsReadOnly="true">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Path=PriceChange, Converter={StaticResource PriceChangeToColorConverter}}"/>
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTemplateColumn Header="Manage" Width="*" IsReadOnly="true">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="Delete" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.DeleteTicker}" CommandParameter="{Binding Path=Ticker}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="LightGray"/>
-                        </Style>
-                    </DataGridTemplateColumn.CellStyle>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Border Grid.Row="2" Background="DarkGray" VerticalAlignment="Center" Width="500" CornerRadius="8" Margin="10,10,10,10" Padding="5,5,5,5">
-            <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Start Monitoring" Command="{Binding StartMonitoring}"/>
-                <Button Content="Stop Monitoring"  Command="{Binding StopMonitoring}"/>
+            <StackPanel Grid.Row="1"  Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBox Style="{StaticResource TextBoxStyle}"  Text="{Binding Path= SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Content="Add" Style = "{StaticResource ButtonTextStyle}" Command="{Binding AddTicker}"/>
             </StackPanel>
+
+
+        </Grid>
+        <Border Grid.Row="1" Style="{StaticResource BorderStyle}">
+            <DataGrid  Style="{StaticResource DataGridStyle}" ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}" RowStyle="{StaticResource DataGridRowStyle}" ItemsSource="{Binding FavoriteStocks}">
+                
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Ticker" Binding="{Binding Ticker}" Width="250" IsReadOnly="true">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Price ($)" Binding="{Binding Price}" Width="70" IsReadOnly="true">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Background" Value="{Binding Path=PriceChange, Converter={StaticResource PriceChangeToColorConverter}}"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Manage" Width="*" IsReadOnly="true">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource ButtonImageStyle}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.DeleteTicker}" CommandParameter="{Binding Path=Ticker}">
+                                    <Image Source="Bin.png" Width="25" Height="25"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                            </Style>
+                        </DataGridTemplateColumn.CellStyle>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </Border>
+
+        <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,10,10,10">
+            <Button Content="Start Monitoring" Style = "{StaticResource ButtonTextStyle}" Command="{Binding StartMonitoring}"/>
+            <Button Content="Stop Monitoring" Style = "{StaticResource ButtonTextStyle}"  Command="{Binding StopMonitoring}"/>
+        </StackPanel>
+
     </Grid>
 </Window>
