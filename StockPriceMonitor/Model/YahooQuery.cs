@@ -10,10 +10,7 @@ namespace StockPriceMonitor.Model
     {
         public async Task<Root> GetTickerData(string ticker)
         {
-            string url = ticker;
-
-
-            using (HttpResponseMessage response = await ApiHelper.ApiClient.GetAsync(url))
+            using (HttpResponseMessage response = await ApiHelper.ApiClient.GetAsync(ticker))
             {
                 if (response.IsSuccessStatusCode)
                 {
@@ -32,6 +29,5 @@ namespace StockPriceMonitor.Model
         {
             return optionChain.result?.Any() == true;
         }
-
     }
 }

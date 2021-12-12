@@ -1,4 +1,4 @@
-    public class Root
-    {
-        public OptionChain optionChain { get; set; }
-    }
+public class Root
+{
+    public OptionChain optionChain { get; set; }
+}

@@ -1,6 +1,4 @@
-﻿using StockPriceMonitor.ViewModel;
-using System;
-using System.ComponentModel;
+﻿using System;
 
 namespace StockPriceMonitor.Model
 {
@@ -9,6 +7,23 @@ namespace StockPriceMonitor.Model
         private readonly string _ticker;
         private double _price;
         private PriceChange _priceChange;
+
+        public Stock(string ticker, double price)
+        {
+            _ticker = ticker;
+            _price = price;
+        }
+
+        public void UpdatePrice(double newPrice)
+        {
+            //Tests while stock exchange is closed
+            Random random = new();
+            newPrice = newPrice + 2 * random.NextDouble() - 1;
+
+            PriceChange = CheckPriceChange(newPrice);
+            Price = newPrice ;
+
+        }
 
         public string Ticker { get { return _ticker; } }
         public double Price
@@ -37,23 +52,6 @@ namespace StockPriceMonitor.Model
             }
         }
 
-        public Stock(string ticker, double price)
-        {
-            _ticker = ticker;
-            _price = price;
-        }
-
-        public void UpdatePrice(double newPrice)
-        {
-            //Tests while stock exchange is closed
-            Random random = new();
-            newPrice = newPrice + 2 * random.NextDouble() - 1;
-
-            PriceChange = CheckPriceChange(newPrice);
-            Price = newPrice ;
-
-        }
-
         private PriceChange CheckPriceChange(double newPrice)
         {
             double priceDifference = newPrice - _price;
@@ -70,14 +68,7 @@ namespace StockPriceMonitor.Model
 
         public void ResetPriceChange()
         {
-            PriceChange = PriceChange.NoChange;
+            PriceChange = PriceChange.Offline;
         }
-    }
-
-    public enum PriceChange
-    {
-        NoChange,
-        Up,
-        Down        
     }
 }

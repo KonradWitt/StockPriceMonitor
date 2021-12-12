@@ -12,38 +12,6 @@ namespace StockPriceMonitor.ViewModel
 {
     internal class MainWindowContext : PropertyChangedBase
     {
-        public ICommand AddTicker { get; private set; }
-        public ICommand DeleteTicker { get; private set; }
-        public ICommand StartMonitoring { get; private set; }
-        public ICommand StopMonitoring { get; private set; }
-        public ObservableCollection<Stock> FavoriteStocks { get; private set; }
-
-
-        public string SearchText
-        {
-            get { return _searchText; }
-            set
-            {
-                if (_searchText != value)
-                {
-                    _searchText = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-        public string UserMessage
-        {
-            get { return _userMessage; }
-            set
-            {
-                if (_userMessage != value)
-                {
-                    _userMessage = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
         private DispatcherTimer _dispatcherTimer;
         private TimeSpan _dispatcherTimerInterval = new TimeSpan(0, 0, 3);
         private string _searchText;
@@ -61,6 +29,38 @@ namespace StockPriceMonitor.ViewModel
             _dispatcherTimer.Tick += DispatcherTimerTick;
         }
 
+        public ICommand AddTicker { get; private set; }
+        public ICommand DeleteTicker { get; private set; }
+        public ICommand StartMonitoring { get; private set; }
+        public ICommand StopMonitoring { get; private set; }
+        public ObservableCollection<Stock> FavoriteStocks { get; private set; }
+
+        public string SearchText
+        {
+            get { return _searchText; }
+            set
+            {
+                if (_searchText != value)
+                {
+                    _searchText = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string UserMessage
+        {
+            get { return _userMessage; }
+            set
+            {
+                if (_userMessage != value)
+                {
+                    _userMessage = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private void InitializeCommands()
         {
             _deleteTicker = DeleteTicker_Execute;
@@ -71,28 +71,29 @@ namespace StockPriceMonitor.ViewModel
             StopMonitoring = new Command(p => StopMonitoring_CanExecute(), p => StopMonitoring_Execute());
         }
 
-        
-
-        
-
         private bool AddTicker_CanExecute()
         {
-
             return !string.IsNullOrEmpty(_searchText);
         }
 
         private async void AddTicker_Execute()
         {
-            UserMessage = "";
+            UserMessage = string.Empty;
+
             if (!FavoriteStocks.Any(x => x.Ticker == _searchText.ToUpper()))
             {
                 YahooQuery yahooQuery = new();
                 var stockData = await yahooQuery.GetTickerData(_searchText);
+
                 if (yahooQuery.CheckIfResultsValid(stockData.optionChain))
                 {
-                    string ticker = stockData.optionChain.result[0].underlyingSymbol;
-                    double price = stockData.optionChain.result[0].quote.regularMarketPrice;
-                    Stock newStock = new Stock(ticker, price);
+                    Result result = stockData.optionChain.result.First();
+
+                    string ticker = result.underlyingSymbol;
+                    double price = result.quote.regularMarketPrice;
+
+                    var newStock = new Stock(ticker, price);
+
                     FavoriteStocks.Add(newStock);
                     SearchText = string.Empty;
                 }
@@ -114,7 +115,12 @@ namespace StockPriceMonitor.ViewModel
 
         private void DeleteTicker_Execute(object ticker)
         {
-            FavoriteStocks.Remove(FavoriteStocks.First(p => p.Ticker == ticker));
+            var toBeRemoved = FavoriteStocks.FirstOrDefault(p => p.Ticker == ticker);
+
+            if (toBeRemoved != null)
+            {
+                FavoriteStocks.Remove(toBeRemoved);
+            }
         }
 
         private bool StartMonitoring_CanExecute()
@@ -130,12 +136,13 @@ namespace StockPriceMonitor.ViewModel
 
         private bool StopMonitoring_CanExecute()
         {
-            return FavoriteStocks.Any();
+            return _dispatcherTimer.IsEnabled;
         }
 
         private void StopMonitoring_Execute()
         {
             _dispatcherTimer.Stop();
+
             foreach (var stock in FavoriteStocks)
             {
                 stock.ResetPriceChange();
@@ -146,16 +153,23 @@ namespace StockPriceMonitor.ViewModel
         {
             UpdateStockData();
         }
+
         private void UpdateStockData()
         {
-            YahooQuery yahooQuery = new();
             Task task = Task.Run(async () =>
             {
+                YahooQuery yahooQuery = new();
+
                 foreach (Stock stock in FavoriteStocks)
                 {
                     var stockData = await yahooQuery.GetTickerData(stock.Ticker);
+
                     Application.Current.Dispatcher.Invoke(() =>
-                    { stock.UpdatePrice(stockData.optionChain.result[0].quote.regularMarketPrice); });
+                    {
+                        double marketPrice = stockData.optionChain.result.First().quote.regularMarketPrice;
+
+                        stock.UpdatePrice(marketPrice);
+                    });
                 }
             });
         }

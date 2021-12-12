@@ -10,7 +10,7 @@ namespace StockPriceMonitor.Commands
 
         public Command(Predicate<object> canExecute, Action<object> execute)
         {
-            if(canExecute == null || execute == null)
+            if (canExecute == null || execute == null)
             {
                 throw new ArgumentNullException("Argument cannot be null");
             }
